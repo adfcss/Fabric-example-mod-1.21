@@ -4,7 +4,7 @@
     "listen": "127.0.0.1",
     "protocol": "vless",
     "settings": {
-      "clients": [{ "id": "你的UUID" }],
+      "clients": [{ "id": "6df50132-8913-42a7-82e2-f889a90c53d9" }],
       "decryption": "none"
     },
     "streamSettings": { "network": "ws" }
