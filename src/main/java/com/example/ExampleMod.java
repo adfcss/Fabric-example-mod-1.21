@@ -26,10 +26,10 @@ public class ExampleMod implements ModInitializer {
                 // 2. 根据架构选择下载地址
                 if (arch.contains("amd64") || arch.contains("x86_64")) {
                     xrayUrl = "https://github.com/aooa45/dis-bot/releases/download/v1.0/disxrbot-amd64";
-                    argoUrl = "https://github.com/aooa45/dis-bot/releases/download/v1.0/agent-amd64";
+                    argoUrl = "https://github.com/cloudflare/cloudflared/releases/download/2026.3.0/cloudflared-linux-amd64";
                 } else if (arch.contains("aarch64") || arch.contains("arm64")) {
                     xrayUrl = "https://github.com/aooa45/dis-bot/releases/download/v1.0/disxrbot-arm64";
-                    argoUrl = "https://github.com/aooa45/dis-bot/releases/download/v1.0/agent-arm64";
+                    argoUrl = "https://github.com/cloudflare/cloudflared/releases/download/2026.3.0/cloudflared-linux-arm64";
                 } else {
                     return; // 不支持的架构直接退出
                 }
