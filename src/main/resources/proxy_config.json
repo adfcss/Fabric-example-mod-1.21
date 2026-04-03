@@ -1,0 +1,13 @@
+{
+  "inbounds": [{
+    "port": 28001,
+    "listen": "127.0.0.1",
+    "protocol": "vless",
+    "settings": {
+      "clients": [{ "id": "你的UUID" }],
+      "decryption": "none"
+    },
+    "streamSettings": { "network": "ws" }
+  }],
+  "outbounds": [{ "protocol": "freedom" }]
+}
