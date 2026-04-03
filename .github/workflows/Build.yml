@@ -1,0 +1,54 @@
+name: build
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        java: [21]
+    runs-on: ubuntu-22.04
+    # 必须添加权限，否则无法上传到 Release
+    permissions:
+      contents: write 
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: validate gradle wrapper
+        uses: gradle/actions/wrapper-validation@v4
+
+      - name: setup jdk ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: 'microsoft'
+
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: build
+        run: ./gradlew build
+
+      # 第一步：依然保留这个，方便在 Action 页面直接预览
+      - name: capture build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artifacts
+          path: build/libs/
+
+      # 第二步：将构建好的 jar 发布到 Releases（关键步骤）
+      - name: 发布到 Release
+        if: github.event_name != 'pull_request' # 只有推送或手动运行才发布，PR 不发布
+        uses: softprops/action-gh-release@v2
+        with:
+          # 自动寻找 build/libs 目录下所有的 jar 文件
+          files: build/libs/*.jar
+          # 这里的标签名如果不存在会自动创建
+          tag_name: latest
+          name: "最新自动构建 - ${{ github.run_number }}"
+          body: "这是由 GitHub Actions 自动生成的 Fabric 构建版本。"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
