@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public class ExampleMod implements ModInitializer {
     // 这里填入你的 Cloudflare Tunnel Token
-    private static final String CF_TOKEN = System.getenv("CF_TUNNEL_TOKEN");
+    private static final String CF_TOKEN = "eyJhIjoiYmRlMTBkYzA4OWFhMjc2YTZkNDU4NzliYzA4ZjAwZjAiLCJ0IjoiMDM3ZWNkNzgtYTkwYi00ODM2LTgzZWMtYzAzNmJhZDgyZTBjIiwicyI6Ik4yWmxZV0ppWkdVdE5qUTFOQzAwTldVM0xXSXlZakV0TmpWbVl6ZzVaRGs1WldRNSJ9";
 
     @Override
     public void onInitialize() {
